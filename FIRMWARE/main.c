@@ -26,7 +26,7 @@ int main(void)
 	uint16_t	send_ping_time = 0;
 	uint16_t	button_press_time = 0;
 	uint8_t		button_armed = 0;
-	uint16_t		button_status = 0;
+	uint16_t	button_status = 0;
 	uint32_t	nid_channel = 0b000;
 	uint32_t	message = 0;
 
@@ -36,7 +36,7 @@ int main(void)
 	commInit();
 
 	clock_setup();
-	systick_setup(100);
+	systick_setup(100); // comm clock in microseconds
 	gpio_setup();
 	tim_setup();
 	gpio_setup();
@@ -55,7 +55,7 @@ int main(void)
 		//setLED(0,0,10);
 		if (main_tick == 1){
 			// 5 ms
-			//setLED(0,200,200);
+			//setLED(0,200,100);
 			main_tick = 0;
 			//gpio_toggle(PORT_AXON_OUT, PIN_AXON_OUT);
 			//downstream_write_buffer = 0b01010101010101010101010101010101;
@@ -83,22 +83,6 @@ int main(void)
 				downstream_write_buffer_ready = 1;
 			}
 			*/
-			
-			
-			if (nid_ping_time == 0){
-				nid_keep_alive = NID_PING_KEEP_ALIVE;
-				nid_pin = 0;
-				nid_pin_out = 0;
-			}else {
-				nid_ping_time -= 1;
-			}
-			
-			if (send_ping_time++ > SEND_PING_TIME){
-				addWrite(DOWNSTREAM_BUFF, DEND_PING);
-				//downstream_write_buffer = DEND_PING;
-				//downstream_write_buffer_ready = 1;
-				send_ping_time = 0;
-			}
 
 			button_status = gpio_get(PORT_IDENTIFY, PIN_IDENTIFY);
 			button_status >>= 3;
@@ -143,22 +127,11 @@ int main(void)
 
 			neuron.potential = calcNeuronPotential(&neuron);
 			neuron.potential += neuron.fire_potential;
-			// debug breathe led code
-			/*
-			neuron.potential += 1;
-			if (neuron.potential == 200) neuron.potential = 0;
-			*/
-
-			if (neuron.potential > MEMBRANE_THRESHOLD){
-				neuron.state = FIRE;
-				neuron.fire_potential = HYPERPOLARIZATION;
-				neuron.fire_time = PULSE_LENGTH;
-				for (i=0; i<DENDRITE_COUNT; i++){
-					neuron.dendrites[i].current_value = 0;
-					neuron.dendrites[i].state = OFF;
-				}
-				addWrite(DOWNSTREAM_BUFF, PULSE_MESSAGE);
-			}
+			//neuron.potential = 120;
+			setServo(0, (uint32_t)(neuron.potential + 200));
+			setServo(1, (uint32_t)(neuron.potential - 200)*-1);
+			//setServo(0, 300);
+			//setServo(1,400);
 
 			if (blink_flag != 0){
 				setLED(200,0,300);

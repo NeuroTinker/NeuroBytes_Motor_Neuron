@@ -5,7 +5,7 @@
 
 #define MEMBRANE_THRESHOLD      140
 #define HYPERPOLARIZATION		-140
-#define DENDRITE_COUNT          4
+#define DENDRITE_COUNT          3
 #define PULSE_LENGTH            5 // led white time
 
 #define DENDRITE_ALIVE_TIME     200
@@ -60,7 +60,7 @@ typedef struct{
 // mode independent vars
 int16_t     potential;
 dendrite_t  dendrites[DENDRITE_COUNT];
-uint16_t    dendrite_ping_time[11];
+uint16_t    dendrite_ping_time[6];
 neuron_states   state;
 learning_states learning_state; // Hebb learning mode
 

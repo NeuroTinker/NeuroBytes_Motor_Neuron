@@ -2,18 +2,13 @@
 #include "neuron.h"
 #include "comm.h"
 
-uint16_t input_pins[11] = {
-    PIN_AXON1_IN,
-	PIN_AXON2_IN,
-	PIN_AXON3_IN,
+uint16_t input_pins[6] = {
 	PIN_DEND1_EX,
 	PIN_DEND1_IN, 
 	PIN_DEND2_EX,
 	PIN_DEND2_IN,
 	PIN_DEND3_EX,
-	PIN_DEND3_IN,
-	PIN_DEND4_EX,
-	PIN_DEND4_IN
+	PIN_DEND3_IN
 };
 
 void neuronInit(neuron_t *n)
@@ -38,10 +33,9 @@ void neuronInit(neuron_t *n)
 		n->dendrites[i].alive_time = 0;
 	}
 
-	n->dendrites[0].magnitude = 140;
-	n->dendrites[1].magnitude = 120;
-	n->dendrites[2].magnitude = 80;
-	n->dendrites[3].magnitude = 50;
+	n->dendrites[0].magnitude = 80;
+	n->dendrites[1].magnitude = 60;
+	n->dendrites[2].magnitude = 40;
 	
 	n->dendrite_ping_time[0] = 0;
 	n->dendrite_ping_time[1] = 0;
@@ -49,10 +43,6 @@ void neuronInit(neuron_t *n)
 	n->dendrite_ping_time[3] = 0;
 	n->dendrite_ping_time[4] = 0;
 	n->dendrite_ping_time[5] = 0;
-	n->dendrite_ping_time[6] = 0;
-	n->dendrite_ping_time[7] = 0;
-	n->dendrite_ping_time[8] = 0;
-	n->dendrite_ping_time[9] = 0;
 }
 
 void checkDendrites(neuron_t * n)
@@ -60,7 +50,7 @@ void checkDendrites(neuron_t * n)
 	uint8_t i;
 	dendrite_states current_state = OFF;
 	
-	for (i=3; i<11; i++){
+	for (i=0; i<6; i++){
 		
 		if (dendrite_ping_flag[i] != 0){
 
@@ -118,17 +108,6 @@ void checkDendrites(neuron_t * n)
 					n->dendrites[2].state = ON;
 					n->dendrites[2].pulse_time = 0;
 					break;
-				case PIN_DEND4_EX:
-					n->dendrites[3].type = EXCITATORY;
-					n->dendrites[3].state = ON;
-					n->dendrites[3].pulse_time = 0;
-					break;
-				case PIN_DEND4_IN:
-					n->dendrites[3].type = INHIBITORY;
-					n->dendrites[3].state = ON;
-					n->dendrites[3].pulse_time = 0;
-					break;
-				
 				default:
 					break;
 			}

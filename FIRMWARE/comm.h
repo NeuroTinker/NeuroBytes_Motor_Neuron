@@ -10,7 +10,7 @@
 
 #include "HAL.h"
 
-#define NUM_INPUTS 11
+#define NUM_INPUTS 6
 #define DEND_PING_TIME		200 // 1000 ms
 #define	NID_PING_TIME		200 // 1000 ms
 #define NID_PING_KEEP_ALIVE     32
@@ -135,15 +135,15 @@ typedef struct{
 } write_buffer_t;
 
 
-extern uint16_t complimentary_pins[11];
+extern uint16_t complimentary_pins[6];
 
-extern volatile uint16_t active_input_pins[11];
+extern volatile uint16_t active_input_pins[6];
 
-extern uint32_t active_input_ports[11];
+extern uint32_t active_input_ports[6];
 
-extern volatile uint16_t active_output_pins[11];
+extern volatile uint16_t active_output_pins[6];
 
-extern uint32_t active_output_ports[11];
+extern uint32_t active_output_ports[6];
 
 // write outputs from message buffer
 
@@ -158,9 +158,9 @@ extern volatile uint8_t all_write_buffer_ready;
 
 extern uint8_t write_count; // Incremented after each bit is written. Write new message after 32-bits.
 
-extern volatile uint8_t dendrite_pulse_flag[11];
+extern volatile uint8_t dendrite_pulse_flag[6];
 extern volatile uint8_t blink_flag;
-extern volatile uint8_t dendrite_ping_flag[11];
+extern volatile uint8_t dendrite_ping_flag[6];
 
 extern volatile uint32_t nid_ping_time;
 extern volatile uint32_t nid_keep_alive;
