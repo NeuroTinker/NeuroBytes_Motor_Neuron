@@ -663,11 +663,11 @@ Wire Wire Line
 Wire Wire Line
 	1300 3750 1550 3750
 Text GLabel 2350 3750 2    60   Input ~ 0
-SWITCH
+IDENTIFY
 Wire Wire Line
 	2350 3750 2150 3750
 Text GLabel 5400 3450 2    60   Input ~ 0
-SWITCH
+IDENTIFY
 $Comp
 L R_Pack04 RN1
 U 1 1 58B6E430
