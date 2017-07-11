@@ -40,7 +40,6 @@ int main(void)
 	gpio_setup();
 	tim_setup();
 	gpio_setup();
-	exti_select_source(EXTI3, GPIOB);
 	setLED(200,0,0);
 	//systick_setup(100000);
 
@@ -49,44 +48,13 @@ int main(void)
 	
 	for(;;)
 	{
-		//if (exti_get_flag_status(PIN_DEND5_EX) != 0) setLED(0,200,200);
-		//gpio_set(PORT_AXON_OUT, PIN_AXON_OUT);
-		//if (gpio_get(PORT_DEND5_EX, PIN_DEND5_EX) != 0) setLED(0,200,200);
-		//setLED(0,0,10);
+
 		if (main_tick == 1){
 			// 5 ms
 			//setLED(0,200,100);
 			main_tick = 0;
-			//gpio_toggle(PORT_AXON_OUT, PIN_AXON_OUT);
-			//downstream_write_buffer = 0b01010101010101010101010101010101;
-			//downstream_write_buffer_ready = 1;
-			/*
-			if (++wait_time == 10){
-				downstream_write_buffer = BLINK_MESSAGE;
-				downstream_write_buffer_ready = 1;
-				wait_time = 0;
-			}
-			*/
-			
-			/*
-			if (++wait_time == DATA_TIME){
-				wait_time = 0;
-				message_data = MMIO32(SYSCFG_BASE + 0x08);
-				nid_write_buffer = DATA_MESSAGE | message_data;
-				nid_write_buffer_ready = 1;
-			}
-			*/
-			/*
-			if (++wait_time == 50){
-				wait_time = 0;
-				downstream_write_buffer = PULSE_MESSAGE;
-				downstream_write_buffer_ready = 1;
-			}
-			*/
 
 			button_status = gpio_get(PORT_IDENTIFY, PIN_IDENTIFY);
-			button_status >>= 3;
-			button_status &= 0b1;
 			if (identify_time > 0){
 				identify_time -= 1;
 				if (identify_channel == 0){
@@ -95,7 +63,6 @@ int main(void)
 				}
 			}
 			if (button_status == 0){ // !=
-				//setLED(200,200,200);
 				if (button_press_time++ >= BUTTON_PRESS_TIME){
 					button_armed = 1;
 					button_press_time = 0;
@@ -104,7 +71,7 @@ int main(void)
 				if (identify_time > 0){
 					nid_channel = identify_channel;
 				} else{
-					neuron.fire_potential += 110;
+					neuron.fire_potential += 60;
 				}
 				button_armed = 0;
 			} else{
@@ -114,7 +81,6 @@ int main(void)
 			if (nid_channel != 0){
 				if (data_time++ > DATA_TIME){
 					data_time = 0;
-					//message = DATA_MESSAGE | (nid_channel << 19) | (uint16_t) neuron.potential | (nid_keep_alive << 22);
 					message = DATA_MESSAGE | (uint16_t) neuron.potential | (nid_channel << 19) | (nid_keep_alive << 22);
 					addWrite(NID_BUFF,message);
 				}
@@ -127,11 +93,10 @@ int main(void)
 
 			neuron.potential = calcNeuronPotential(&neuron);
 			neuron.potential += neuron.fire_potential;
-			//neuron.potential = 120;
-			setServo(0, (uint32_t)(neuron.potential + 200));
-			setServo(1, (uint32_t)(neuron.potential - 200)*-1);
+			setServo(0, (int32_t)((neuron.potential / 1000) + SERVO_ZERO) * 1);
+			setServo(1, (int32_t)((neuron.potential / 1000) - SERVO_ZERO) * -1);
 			//setServo(0, 300);
-			//setServo(1,400);
+			//setServo(1, 250);
 
 			if (blink_flag != 0){
 				setLED(200,0,300);
@@ -149,14 +114,14 @@ int main(void)
 				}
 				LEDFullWhite();
 			} else if (neuron.state == INTEGRATE){
-				if (neuron.potential > 140){
+				if (neuron.potential > 40000){
 					setLED(200,0,0);
 				} else if (neuron.potential > 0){
-					setLED(neuron.potential * 10 / 7, 200 - (neuron.potential * 10 / 7), 0);
-				} else if (neuron.potential < -140){
+					setLED((neuron.potential/2)/100, 200 - ((neuron.potential/2) / 100), 0);
+				} else if (neuron.potential < -40000){
 					setLED(0,0, 200);
 				} else if (neuron.potential < 0){
-					setLED(0, 200 + (neuron.potential * 10 / 7), -1 * neuron.potential * 10 / 7);
+					setLED(0, 200 + ((neuron.potential/2) / 100), -1 * (neuron.potential /2) / 100);
 				} else{
 					setLED(0,200,0);
 				}

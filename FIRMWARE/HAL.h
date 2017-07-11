@@ -21,26 +21,28 @@
 #define PORT_R_LED      GPIOA
 #define PORT_G_LED      GPIOA
 #define PORT_B_LED      GPIOA
-#define PIN_R_LED		GPIO0
-#define PIN_G_LED		GPIO2
-#define PIN_B_LED		GPIO1
+#define PIN_R_LED		GPIO2 // TIM2_CH3
+#define PIN_G_LED		GPIO5 // TIM2_CH1
+#define PIN_B_LED		GPIO3 // TIM2_CH4
 
 #define PORT_IDENTIFY	GPIOB
 #define PIN_IDENTIFY	GPIO1
 
-#define PORT_DEND1_EX   GPIOB
 #define PORT_DEND1_IN   GPIOA
-#define PORT_DEND2_EX   GPIOA
+#define PORT_DEND1_EX   GPIOA
 #define PORT_DEND2_IN   GPIOA
-#define PORT_DEND3_EX   GPIOA
-#define PORT_DEND3_IN   GPIOA
+#define PORT_DEND2_EX   GPIOA
+#define PORT_DEND3_IN   GPIOC
+#define PORT_DEND3_EX   GPIOC
 
-#define PIN_DEND1_EX    GPIO0
-#define PIN_DEND1_IN    GPIO2
-#define PIN_DEND2_EX    GPIO6
-#define PIN_DEND2_IN    GPIO5
-#define PIN_DEND3_EX    GPIO4
-#define PIN_DEND3_IN    GPIO3
+#define PIN_DEND1_IN    GPIO7
+#define PIN_DEND1_EX    GPIO6
+#define PIN_DEND2_IN    GPIO1
+#define PIN_DEND2_EX    GPIO0
+#define PIN_DEND3_IN    GPIO15
+#define PIN_DEND3_EX    GPIO14
+
+#define SERVO_ZERO      280
 
 
 
@@ -60,7 +62,7 @@ void LEDFullWhite(void);
 void setLED(uint16_t r, uint16_t g, uint16_t b);
 void setAsInput(uint32_t port, uint32_t pin);
 void setAsOutput(uint32_t port, uint32_t pin);
-void setServo(uint8_t servo, uint32_t duty);
+void setServo(uint8_t servo, int32_t duty);
 
 
 //void tim2_isr(void);

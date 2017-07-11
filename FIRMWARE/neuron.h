@@ -36,8 +36,8 @@ dendrite_states     state; // is pulse being received or not
 dendrite_status     status; // not connected / connected
 dendrite_types      type; // excitatory or inhibitory
 uint16_t            alive_time;
-int16_t             magnitude; // weighting
-int16_t             current_value; // current contribution to the membrane potential
+int32_t             magnitude; // weighting
+int32_t             current_value; // current contribution to the membrane potential
 uint8_t             nid_flag; // is this dendrite the closest to the NID
 uint8_t             read_flag; // dendrite is currently getting a message
 uint8_t             read_time; // message length decrementor
@@ -58,14 +58,14 @@ SLEEP =	2
 
 typedef struct{
 // mode independent vars
-int16_t     potential;
+int32_t     potential;
 dendrite_t  dendrites[DENDRITE_COUNT];
 uint16_t    dendrite_ping_time[6];
 neuron_states   state;
 learning_states learning_state; // Hebb learning mode
 
 uint16_t    fire_time;
-int16_t		fire_potential;
+int32_t		fire_potential;
 
 // Hebb vars
 uint16_t	hebb_time;
@@ -76,7 +76,7 @@ uint16_t	ms_count;
 
 void neuronInit(neuron_t *n);
 void checkDendrites(neuron_t * n);
-int16_t calcNeuronPotential(neuron_t *n);
+int32_t calcNeuronPotential(neuron_t *n);
 void dendriteDecayStep(neuron_t * n);
 void membraneDecayStep(neuron_t * n);
 void dendriteSwitchOff(dendrite_t * dendrite);

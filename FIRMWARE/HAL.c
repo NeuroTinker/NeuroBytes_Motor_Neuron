@@ -28,7 +28,8 @@ void systick_setup(int xms)
 	
     systick_set_clocksource(STK_CSR_CLKSOURCE_EXT);
     STK_CVR = 0;
-    systick_set_reload(2 * xms);
+    //systick_set_reload(2 * xms);
+	systick_set_reload(180);
     systick_counter_enable();
     systick_interrupt_enable();
 	
@@ -47,9 +48,9 @@ void gpio_setup(void)
 	/*	Set up LED pins, NeuroBytes v1.01:
 		Alternative Function Mode with no pullup/pulldown
 		Output options: push-pull, high speed
-		PIN_R_LED (PA0): AF5, TIM2_CH1
-		PIN_G_LED (PA2): AF2, TIM2_CH3
-		PIN_B_LED (PA1): AF5, TIM2_CH2
+		PIN_R_LED (PA2): AF2, TIM2_CH3
+		PIN_G_LED (PA5): AF5, TIM2_CH1
+		PIN_B_LED (PA3): AF2, TIM2_CH4
 	*/
 
 	gpio_mode_setup(PORT_R_LED, GPIO_MODE_AF, GPIO_PUPD_NONE, PIN_R_LED);
@@ -59,7 +60,7 @@ void gpio_setup(void)
 	gpio_set_output_options(PORT_G_LED, GPIO_OTYPE_PP, GPIO_OSPEED_HIGH, PIN_G_LED);
 	gpio_set_output_options(PORT_B_LED, GPIO_OTYPE_PP, GPIO_OSPEED_HIGH, PIN_B_LED);
 	gpio_set_af(PORT_R_LED, GPIO_AF2, PIN_R_LED);
-	gpio_set_af(PORT_G_LED, GPIO_AF2, PIN_G_LED);
+	gpio_set_af(PORT_G_LED, GPIO_AF5, PIN_G_LED);
 	gpio_set_af(PORT_B_LED, GPIO_AF2, PIN_B_LED);
 
 
@@ -139,47 +140,41 @@ void setAsOutput(uint32_t port, uint32_t pin)
 
 void exti0_1_isr(void)
 {
-	// interrupt handler for pins 0 (dend1_ex)
-	if ((EXTI_PR & PIN_DEND1_EX) != 0){
-		active_input_pins[0] = PIN_DEND1_EX;
-		EXTI_PR |= PIN_DEND1_EX; // clear interrupt flag
-		//EXTI_PR &= ~(PIN_DEND1_IN);
+	if ((EXTI_PR & PIN_DEND2_EX) != 0){
+		// dend2 ex
+		active_input_pins[2] = PIN_DEND2_EX;
+		EXTI_PR |= PIN_DEND2_EX; // clear interrupt flag
+	} else if ((EXTI_PR & PIN_DEND2_IN) != 0){
+		//dend2 in
+		active_input_pins[3] = PIN_DEND2_IN;
+		EXTI_PR |= PIN_DEND2_IN;
 	}
 }
 
 void exti2_3_isr(void)
 {
-	// interrupt handler for pins 2,3 (dend1_in, dend3_in)
-	//setLED(200,0,0);
-	//gpio_toggle(PORT_AXON_OUT, PIN_AXON_OUT);
-	if ((EXTI_PR & PIN_DEND1_IN) != 0){
-		//setLED(200,0,200);
-		//gpio_toggle(PORT_AXON_OUT, PIN_AXON_OUT);
-		active_input_pins[1] = PIN_DEND1_IN;
-		EXTI_PR |= EXTI3;
-	} else if ((EXTI_PR & PIN_DEND3_IN) != 0){
-		active_input_pins[5] = PIN_DEND3_IN;
-		EXTI_PR |= PIN_DEND3_IN;
-	}
+	// no pin 2 or pin 3 interrupts
+	EXTI_PR |= 0b11111111;
 }
 
 void exti4_15_isr(void)
 {
-	// interrupt handler for pins 4-15
-	//setLED(0,0,200);
-	//gpio_toggle(PORT_AXON_OUT, PIN_AXON_OUT);
-	if ((EXTI_PR & PIN_DEND3_EX) != 0){
-		// pin 4 (dend3_ex)
+	if ((EXTI_PR & PIN_DEND1_EX) != 0){
+		// pin 6 (dend1_ex)
+		active_input_pins[0] = PIN_DEND1_EX;
+		EXTI_PR |= PIN_DEND1_EX;
+	} else if ((EXTI_PR & PIN_DEND1_IN) != 0){
+		// pin 7 (dend1_in)
+		active_input_pins[1] = PIN_DEND1_IN;
+		EXTI_PR |= PIN_DEND1_IN;
+	} else if ((EXTI_PR & PIN_DEND3_EX) != 0){
+		// pin 14 (dend3_ex)
 		active_input_pins[4] = PIN_DEND3_EX;
 		EXTI_PR |= PIN_DEND3_EX;
-	} else if ((EXTI_PR & PIN_DEND2_IN) != 0){
-		// pin 5 (dend2_in)
-		active_input_pins[3] = PIN_DEND2_IN;
-		EXTI_PR |= PIN_DEND2_IN;
-	} else if ((EXTI_PR & PIN_DEND2_EX) != 0){
-		// pin 6 (dend2_ex)
-		active_input_pins[2] = PIN_DEND2_EX;
-		EXTI_PR |= PIN_DEND2_EX;
+	} else if ((EXTI_PR & PIN_DEND3_IN) != 0){
+		// pin 15 (dend3_in)
+		active_input_pins[5] = PIN_DEND3_IN;
+		EXTI_PR |= PIN_DEND3_IN;
 	}
 }
 
@@ -197,13 +192,6 @@ void tim_setup(void)
 	/* 	Set up TIM2 mode to no clock divider ratio, edge alignment, and up direction */
 	timer_set_mode(TIM2, TIM_CR1_CKD_CK_INT, TIM_CR1_CMS_EDGE, TIM_CR1_DIR_UP);
 
-	// test commands
-	//timer_disable_preload(TIM2);
-	//timer_continuous_mode(TIM2);
-	//TIM_CR1(TIM2) |= TIM_CR1_CEN;
-	//TIM2_EGR |= TIM_EGR_UG;
-	//timer_update_on_any(TIM2);
-
 
 	/*	Set prescaler to 0: 16 MHz clock */
 	timer_set_prescaler(TIM2, 1);
@@ -214,19 +202,19 @@ void tim_setup(void)
 	
 
 	// 	Set TIM2 Output Compare mode to PWM1 on channels 1, 2, and 3
-	timer_set_oc_mode(TIM2, TIM_OC1, TIM_OCM_PWM1);
 	timer_set_oc_mode(TIM2, TIM_OC3, TIM_OCM_PWM1);
-	timer_set_oc_mode(TIM2, TIM_OC2, TIM_OCM_PWM1); 
+	timer_set_oc_mode(TIM2, TIM_OC1, TIM_OCM_PWM1);
+	timer_set_oc_mode(TIM2, TIM_OC4, TIM_OCM_PWM1); 
 
 	// 	Set starting output compare values
-	timer_set_oc_value(TIM2, TIM_OC1, 0);
 	timer_set_oc_value(TIM2, TIM_OC3, 0);
-	timer_set_oc_value(TIM2, TIM_OC2, 0); 
+	timer_set_oc_value(TIM2, TIM_OC1, 0);
+	timer_set_oc_value(TIM2, TIM_OC4, 0); 
 
 	// 	Enable outputs 
-	timer_enable_oc_output(TIM2, TIM_OC1);
 	timer_enable_oc_output(TIM2, TIM_OC3);
-	timer_enable_oc_output(TIM2, TIM_OC2);
+	timer_enable_oc_output(TIM2, TIM_OC1);
+	timer_enable_oc_output(TIM2, TIM_OC4);
 	
 
 	/*	Enable counter */
@@ -241,7 +229,7 @@ void tim_setup(void)
 
 
 	timer_set_mode(TIM21, TIM_CR1_CKD_CK_INT, TIM_CR1_CMS_EDGE, TIM_CR1_DIR_UP);
-	timer_set_prescaler(TIM21, 80);
+	timer_set_prescaler(TIM21,85); // 78 
 
 	timer_set_period(TIM21, 4000);
 
@@ -260,7 +248,7 @@ void tim_setup(void)
 	timer_enable_counter(TIM21);
 
 	// Enable TIM21 interrupts (600 us)
-	timer_enable_irq(TIM21, TIM_DIER_UIE);
+	//timer_enable_irq(TIM21, TIM_DIER_UIE);
 
 }
 
@@ -272,7 +260,7 @@ void tim21_isr(void)
 		Each interrupt is one read and write of gpios.
 		Interrupts occur every 100 us.
 	*/
-	gpio_toggle(PORT_SERVO1, PIN_SERVO1);
+	//gpio_toggle(PORT_SERVO1, PIN_SERVO1);
     MMIO32((TIM21_BASE) + 0x10) &= ~(1<<0); //clear the interrupt register
 }
 
@@ -296,33 +284,33 @@ void setLED(uint16_t r, uint16_t g, uint16_t b)
 {
 	if (r <= 1023) 
 	{
-		timer_set_oc_value(TIM2, TIM_OC1, gamma_lookup[r]);
+		timer_set_oc_value(TIM2, TIM_OC3, gamma_lookup[r]);
 	}
 	else 
-	{
-		timer_set_oc_value(TIM2, TIM_OC1, 9600);
-	}
-
-	if (g <= 1023) 
-	{
-		timer_set_oc_value(TIM2, TIM_OC3, gamma_lookup[g]);
-	}
-	else
 	{
 		timer_set_oc_value(TIM2, TIM_OC3, 9600);
 	}
 
-	if (b <= 1023)
+	if (g <= 1023) 
 	{
-		timer_set_oc_value(TIM2, TIM_OC2, gamma_lookup[b]);
+		timer_set_oc_value(TIM2, TIM_OC4, gamma_lookup[g]);
 	}
 	else
 	{
-		timer_set_oc_value(TIM2, TIM_OC2, 9600);
+		timer_set_oc_value(TIM2, TIM_OC4, 9600);
+	}
+
+	if (b <= 1023)
+	{
+		timer_set_oc_value(TIM2, TIM_OC1, gamma_lookup[b]);
+	}
+	else
+	{
+		timer_set_oc_value(TIM2, TIM_OC1, 9600);
 	}
 }
 
-void setServo(uint8_t servo, uint32_t duty)
+void setServo(uint8_t servo, int32_t duty)
 {
 	// servo : 0 => servo 1 ; 1 => servo 2
 

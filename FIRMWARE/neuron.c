@@ -17,7 +17,7 @@ void neuronInit(neuron_t *n)
 
 	n->potential = 0;
 	n->state = INTEGRATE;
-
+ 
 	n->fire_time = 0;
 	n->fire_potential = 0;
 
@@ -33,9 +33,9 @@ void neuronInit(neuron_t *n)
 		n->dendrites[i].alive_time = 0;
 	}
 
-	n->dendrites[0].magnitude = 80;
-	n->dendrites[1].magnitude = 60;
-	n->dendrites[2].magnitude = 40;
+	n->dendrites[0].magnitude = 20000;
+	n->dendrites[1].magnitude = 20000;
+	n->dendrites[2].magnitude = 20000;
 	
 	n->dendrite_ping_time[0] = 0;
 	n->dendrite_ping_time[1] = 0;
@@ -167,19 +167,19 @@ void dendriteDecayStep(neuron_t * n)
 	uint8_t i;
 
 	for(i=0; i<DENDRITE_COUNT; i++){
-		n->dendrites[i].current_value = (n->dendrites[i].current_value * 63 ) / 64;
+		n->dendrites[i].current_value = (n->dendrites[i].current_value * 127 ) / 128;
 	}
 }
 
 void membraneDecayStep(neuron_t * n)
 {
-	n->fire_potential = (n->fire_potential * 63) / 64;
+	n->fire_potential = (n->fire_potential * 2047) / 2048;
 }
 
-int16_t calcNeuronPotential(neuron_t *n)
+int32_t calcNeuronPotential(neuron_t *n)
 {
 	uint8_t i;
-	int16_t new_v = 0;
+	int32_t new_v = 0;
 	for (i=0; i<DENDRITE_COUNT; i++){
 		if (n->dendrites[i].state == ON){
 			switch(n->dendrites[i].type){
