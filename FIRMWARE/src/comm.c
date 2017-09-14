@@ -166,13 +166,13 @@ void readInputs(void)
 
                         dendrite_ping_flag[i] = 1;
                         if (i % 2 != 0){
-                            // excitatory
-                            setAsOutput(active_input_ports[i+1], complimentary_pins[i]);
-                            active_output_pins[i+1] = complimentary_pins[i];
-                        } else{
                             // inhibitory
                             setAsOutput(active_input_ports[i-1], complimentary_pins[i]);
                             active_output_pins[i-1] = complimentary_pins[i];
+                        } else{
+                            // excitatory
+                            setAsOutput(active_input_ports[i+1], complimentary_pins[i]);
+                            active_output_pins[i+1] = complimentary_pins[i];
                         }
                     } else if (recipient_id == ALL){
                         /*
@@ -327,7 +327,7 @@ void writeAll(void)
     uint32_t value;
     value = write_buffer.all[0] & 0x80000000;
     write_buffer.all[0] <<= 1;
-    for (i=0;i<11;i++){
+    for (i=0;i<6;i++){
         if (active_output_pins[i] != 0 && active_output_pins[i] != complimentary_pins[write_buffer.source_pin]){
             if (value != 0){
                 gpio_set(active_output_ports[i], active_output_pins[i]);

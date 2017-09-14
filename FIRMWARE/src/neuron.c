@@ -61,7 +61,7 @@ void checkDendrites(neuron_t * n)
 			//setAsInput(active_input_ports[i], input_pins[i]);
 			
 			if (i % 2 != 0){
-				setAsInput(active_input_ports[i+1], complimentary_pins[i]);
+				setAsInput(active_input_ports[i-1], complimentary_pins[i]);
 				active_output_pins[i+1] = 0;
 			} else{
 				setAsInput(active_input_ports[i+1], complimentary_pins[i]);

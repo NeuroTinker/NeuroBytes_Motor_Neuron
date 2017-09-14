@@ -1025,20 +1025,20 @@ OUTPUT(main.elf elf32-littlearm)
  .debug_abbrev  0x000000000000116f       0x14 /usr/lib/gcc/arm-none-eabi/4.9.3/armv6-m/libgcc.a(_divsi3.o)
  .debug_abbrev  0x0000000000001183       0x14 /usr/lib/gcc/arm-none-eabi/4.9.3/armv6-m/libgcc.a(_dvmd_tls.o)
 
-.debug_loc      0x0000000000000000     0x1e30
+.debug_loc      0x0000000000000000     0x1e5b
  .debug_loc     0x0000000000000000      0x345 comm.o
  .debug_loc     0x0000000000000345      0x1fb HAL.o
- .debug_loc     0x0000000000000540      0x1bf neuron.o
- .debug_loc     0x00000000000006ff      0x199 main.o
- .debug_loc     0x0000000000000898      0x278 ../../libopencm3/lib/libopencm3_stm32l0.a(rcc.o)
- .debug_loc     0x0000000000000b10      0xc30 ../../libopencm3/lib/libopencm3_stm32l0.a(timer_common_all.o)
- .debug_loc     0x0000000000001740       0x76 ../../libopencm3/lib/libopencm3_stm32l0.a(gpio_common_all.o)
- .debug_loc     0x00000000000017b6      0x17f ../../libopencm3/lib/libopencm3_stm32l0.a(gpio_common_f0234.o)
- .debug_loc     0x0000000000001935      0x108 ../../libopencm3/lib/libopencm3_stm32l0.a(rcc_common_all.o)
- .debug_loc     0x0000000000001a3d      0x174 ../../libopencm3/lib/libopencm3_stm32l0.a(exti_common_all.o)
- .debug_loc     0x0000000000001bb1       0xba ../../libopencm3/lib/libopencm3_stm32l0.a(vector.o)
- .debug_loc     0x0000000000001c6b       0xc5 ../../libopencm3/lib/libopencm3_stm32l0.a(systick.o)
- .debug_loc     0x0000000000001d30      0x100 ../../libopencm3/lib/libopencm3_stm32l0.a(nvic.o)
+ .debug_loc     0x0000000000000540      0x1ea neuron.o
+ .debug_loc     0x000000000000072a      0x199 main.o
+ .debug_loc     0x00000000000008c3      0x278 ../../libopencm3/lib/libopencm3_stm32l0.a(rcc.o)
+ .debug_loc     0x0000000000000b3b      0xc30 ../../libopencm3/lib/libopencm3_stm32l0.a(timer_common_all.o)
+ .debug_loc     0x000000000000176b       0x76 ../../libopencm3/lib/libopencm3_stm32l0.a(gpio_common_all.o)
+ .debug_loc     0x00000000000017e1      0x17f ../../libopencm3/lib/libopencm3_stm32l0.a(gpio_common_f0234.o)
+ .debug_loc     0x0000000000001960      0x108 ../../libopencm3/lib/libopencm3_stm32l0.a(rcc_common_all.o)
+ .debug_loc     0x0000000000001a68      0x174 ../../libopencm3/lib/libopencm3_stm32l0.a(exti_common_all.o)
+ .debug_loc     0x0000000000001bdc       0xba ../../libopencm3/lib/libopencm3_stm32l0.a(vector.o)
+ .debug_loc     0x0000000000001c96       0xc5 ../../libopencm3/lib/libopencm3_stm32l0.a(systick.o)
+ .debug_loc     0x0000000000001d5b      0x100 ../../libopencm3/lib/libopencm3_stm32l0.a(nvic.o)
 
 .debug_aranges  0x0000000000000000      0x718
  .debug_aranges
@@ -1091,24 +1091,24 @@ OUTPUT(main.elf elf32-littlearm)
  .debug_ranges  0x0000000000000520       0x80 ../../libopencm3/lib/libopencm3_stm32l0.a(systick.o)
  .debug_ranges  0x00000000000005a0       0x40 ../../libopencm3/lib/libopencm3_stm32l0.a(nvic.o)
 
-.debug_line     0x0000000000000000     0x289b
+.debug_line     0x0000000000000000     0x289a
  .debug_line    0x0000000000000000      0x21c comm.o
  .debug_line    0x000000000000021c      0x31c HAL.o
- .debug_line    0x0000000000000538      0x1c5 neuron.o
- .debug_line    0x00000000000006fd      0x14e main.o
- .debug_line    0x000000000000084b      0x3a2 ../../libopencm3/lib/libopencm3_stm32l0.a(rcc.o)
- .debug_line    0x0000000000000bed      0x8b6 ../../libopencm3/lib/libopencm3_stm32l0.a(timer_common_all.o)
- .debug_line    0x00000000000014a3      0x2bb ../../libopencm3/lib/libopencm3_stm32l0.a(gpio_common_all.o)
- .debug_line    0x000000000000175e      0x2a8 ../../libopencm3/lib/libopencm3_stm32l0.a(gpio_common_f0234.o)
- .debug_line    0x0000000000001a06      0x2c7 ../../libopencm3/lib/libopencm3_stm32l0.a(rcc_common_all.o)
- .debug_line    0x0000000000001ccd      0x31a ../../libopencm3/lib/libopencm3_stm32l0.a(exti_common_all.o)
- .debug_line    0x0000000000001fe7      0x292 ../../libopencm3/lib/libopencm3_stm32l0.a(vector.o)
- .debug_line    0x0000000000002279      0x24b ../../libopencm3/lib/libopencm3_stm32l0.a(systick.o)
- .debug_line    0x00000000000024c4      0x23a ../../libopencm3/lib/libopencm3_stm32l0.a(nvic.o)
- .debug_line    0x00000000000026fe       0x66 /usr/lib/gcc/arm-none-eabi/4.9.3/armv6-m/libgcc.a(_thumb1_case_sqi.o)
- .debug_line    0x0000000000002764       0x66 /usr/lib/gcc/arm-none-eabi/4.9.3/armv6-m/libgcc.a(_thumb1_case_uqi.o)
- .debug_line    0x00000000000027ca       0x73 /usr/lib/gcc/arm-none-eabi/4.9.3/armv6-m/libgcc.a(_divsi3.o)
- .debug_line    0x000000000000283d       0x5e /usr/lib/gcc/arm-none-eabi/4.9.3/armv6-m/libgcc.a(_dvmd_tls.o)
+ .debug_line    0x0000000000000538      0x1c4 neuron.o
+ .debug_line    0x00000000000006fc      0x14e main.o
+ .debug_line    0x000000000000084a      0x3a2 ../../libopencm3/lib/libopencm3_stm32l0.a(rcc.o)
+ .debug_line    0x0000000000000bec      0x8b6 ../../libopencm3/lib/libopencm3_stm32l0.a(timer_common_all.o)
+ .debug_line    0x00000000000014a2      0x2bb ../../libopencm3/lib/libopencm3_stm32l0.a(gpio_common_all.o)
+ .debug_line    0x000000000000175d      0x2a8 ../../libopencm3/lib/libopencm3_stm32l0.a(gpio_common_f0234.o)
+ .debug_line    0x0000000000001a05      0x2c7 ../../libopencm3/lib/libopencm3_stm32l0.a(rcc_common_all.o)
+ .debug_line    0x0000000000001ccc      0x31a ../../libopencm3/lib/libopencm3_stm32l0.a(exti_common_all.o)
+ .debug_line    0x0000000000001fe6      0x292 ../../libopencm3/lib/libopencm3_stm32l0.a(vector.o)
+ .debug_line    0x0000000000002278      0x24b ../../libopencm3/lib/libopencm3_stm32l0.a(systick.o)
+ .debug_line    0x00000000000024c3      0x23a ../../libopencm3/lib/libopencm3_stm32l0.a(nvic.o)
+ .debug_line    0x00000000000026fd       0x66 /usr/lib/gcc/arm-none-eabi/4.9.3/armv6-m/libgcc.a(_thumb1_case_sqi.o)
+ .debug_line    0x0000000000002763       0x66 /usr/lib/gcc/arm-none-eabi/4.9.3/armv6-m/libgcc.a(_thumb1_case_uqi.o)
+ .debug_line    0x00000000000027c9       0x73 /usr/lib/gcc/arm-none-eabi/4.9.3/armv6-m/libgcc.a(_divsi3.o)
+ .debug_line    0x000000000000283c       0x5e /usr/lib/gcc/arm-none-eabi/4.9.3/armv6-m/libgcc.a(_dvmd_tls.o)
 
 .debug_str      0x0000000000000000    0x11444
  .debug_str     0x0000000000000000      0x491 comm.o
