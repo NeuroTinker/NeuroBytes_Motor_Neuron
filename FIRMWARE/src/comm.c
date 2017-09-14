@@ -9,6 +9,8 @@ uint8_t message_buffer_count[6];
 
 extern volatile uint16_t active_input_pins[6] = {0,0,0,0,0,0};
 
+volatile uint8_t active_input_ticks[11] = {0,0,0,0,0,0,0,0,0,0,0};
+
 extern volatile uint16_t active_output_pins[6] = {0,0,0,0,0,0};
 
 extern volatile uint32_t dendrite_pulses[3] = {0,0,0};

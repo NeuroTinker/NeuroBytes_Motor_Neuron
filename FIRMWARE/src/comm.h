@@ -139,6 +139,8 @@ extern uint16_t complimentary_pins[6];
 
 extern volatile uint16_t active_input_pins[6];
 
+extern volatile uint8_t active_input_ticks[11];
+
 extern uint32_t active_input_ports[6];
 
 extern volatile uint16_t active_output_pins[6];

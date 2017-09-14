@@ -5,6 +5,7 @@
 volatile uint8_t toggle = 0;
 volatile uint8_t tick = 0;
 extern volatile uint8_t main_tick = 0;
+volatile uint8_t read_tick = 0;
 
 void clock_setup(void)
 {
@@ -20,7 +21,13 @@ void sys_tick_handler(void)
 		tick = 0;
 	}
 	readInputs();
-	write();
+	
+	if (++read_tick >= 3){
+		write();
+		read_tick = 0;
+	}
+	
+	MMIO32((TIM21_BASE) + 0x10) &= ~(1<<0); //clear the interrupt register	
 }
 
 void systick_setup(int xms)

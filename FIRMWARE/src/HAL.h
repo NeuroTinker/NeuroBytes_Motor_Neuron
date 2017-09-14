@@ -48,6 +48,7 @@
 
 extern volatile uint8_t main_tick;
 extern volatile uint8_t tick;
+extern volatile uint8_t read_tick;
 static const uint16_t gamma_lookup[1024];
 
 
