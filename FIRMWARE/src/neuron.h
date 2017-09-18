@@ -56,6 +56,11 @@ HEBB =	1,
 SLEEP =	2
 } learning_states;
 
+typedef enum{
+CR = 	0,
+STD = 	1
+} servo_types;
+
 typedef struct{
 // mode independent vars
 int32_t     potential;
@@ -63,6 +68,7 @@ dendrite_t  dendrites[DENDRITE_COUNT];
 uint16_t    dendrite_ping_time[6];
 neuron_states   state;
 learning_states learning_state; // Hebb learning mode
+servo_types 	servo_type; // servo mode (continuous rotation vs standard)
 
 uint16_t    fire_time;
 int32_t		fire_potential;

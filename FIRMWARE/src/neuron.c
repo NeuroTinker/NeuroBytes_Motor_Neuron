@@ -24,6 +24,8 @@ void neuronInit(neuron_t *n)
 	n->hebb_time = 0;
 	n->learning_state = NONE;
 
+	n->servo_type = CR;
+
 	for (i=0;i<DENDRITE_COUNT;i++){
 		n->dendrites[i].state = OFF;
 		n->dendrites[i].current_value = 0;
