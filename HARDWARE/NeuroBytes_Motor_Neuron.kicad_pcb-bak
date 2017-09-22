@@ -2,8 +2,8 @@
 
   (general
     (links 87)
-    (no_connects 0)
-    (area 156.899999 35.09 233.540001 80.390001)
+    (no_connects 1)
+    (area 162.385486 43.799953 213.653359 72.338769)
     (thickness 1.6)
     (drawings 156)
     (tracks 237)
@@ -61,14 +61,14 @@
     (mod_edge_width 0.15)
     (mod_text_size 1 1)
     (mod_text_width 0.15)
-    (pad_size 1 2.7)
+    (pad_size 2 1)
     (pad_drill 0)
     (pad_to_mask_clearance 0)
     (aux_axis_origin 162.44 72.29)
     (grid_origin 162.44 72.29)
     (visible_elements FFFFFF7F)
     (pcbplotparams
-      (layerselection 0x010fc_80000001)
+      (layerselection 0x210fc_80000001)
       (usegerberextensions false)
       (excludeedgelayer true)
       (linewidth 0.100000)
@@ -91,7 +91,7 @@
       (mirror false)
       (drillshape 0)
       (scaleselection 1)
-      (outputdirectory NeuroTinker_NeuroBytes_Motor_Neuron_RFQ_06032017_Macrofab/))
+      (outputdirectory ../../../NeuroTinker_RFQ_Sept2017/NeuroBytes_Motor_Neuron/))
   )
 
   (net 0 "")
@@ -181,7 +181,7 @@
     (add_net SWDIO)
   )
 
-  (module KiCad_Footprints:ZF_CONN_JST_GH_5POS (layer B.Cu) (tedit 598DFFBD) (tstamp 598E086C)
+  (module KiCad_Footprints:ZF_CONN_JST_GH_5POS (layer B.Cu) (tedit 59C58D2C) (tstamp 598E086C)
     (at 192.54 69.29 270)
     (path /598E035B)
     (attr smd)
@@ -218,7 +218,7 @@
     (fp_text reference C1 (at 0 -1.5 90) (layer Cmts.User)
       (effects (font (size 1 1) (thickness 0.15)))
     )
-    (fp_text value C (at 0 4.7 90) (layer B.Fab) hide
+    (fp_text value 1u (at 0 4.7 90) (layer B.Fab) hide
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
     (pad 1 smd rect (at -1 0 90) (size 1 1.2) (layers B.Cu B.Paste B.Mask)
@@ -234,7 +234,7 @@
     (fp_text reference C3 (at 0 -1.5 135) (layer Cmts.User)
       (effects (font (size 1 1) (thickness 0.15)))
     )
-    (fp_text value C (at 0 1.5 135) (layer B.Fab) hide
+    (fp_text value 0u1 (at 0 1.5 135) (layer B.Fab) hide
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
     (pad 1 smd rect (at -0.6 0 135) (size 0.8 0.5) (layers B.Cu B.Paste B.Mask)
@@ -255,7 +255,7 @@
     (fp_text reference C5 (at 0 -1.5) (layer Cmts.User)
       (effects (font (size 1 1) (thickness 0.15)))
     )
-    (fp_text value C (at 0 1.5) (layer B.Fab) hide
+    (fp_text value 0u1 (at 0 1.5) (layer B.Fab) hide
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
     (pad 1 smd rect (at -0.6 0) (size 0.8 0.5) (layers B.Cu B.Paste B.Mask)
@@ -276,7 +276,7 @@
     (fp_text reference R1 (at 0 -1.5 180) (layer Cmts.User)
       (effects (font (size 1 1) (thickness 0.15)))
     )
-    (fp_text value 220 (at 0 1.5 180) (layer B.Fab) hide
+    (fp_text value 150 (at 0 1.5 180) (layer B.Fab) hide
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
     (pad 1 smd rect (at -0.6 0 180) (size 0.8 0.5) (layers B.Cu B.Paste B.Mask)
@@ -313,7 +313,7 @@
 
   (module KiCad_Footprints:ZF_SMD_NonPol_0402 (layer B.Cu) (tedit 5734FC22) (tstamp 58BED7B2)
     (at 177 62.5 180)
-    (path /58B5C32A)
+    (path /59C438A3)
     (attr smd)
     (fp_text reference R3 (at 0 -1.5 180) (layer Cmts.User)
       (effects (font (size 1 1) (thickness 0.15)))
@@ -451,7 +451,7 @@
     (fp_text reference R4 (at 0 -1.5) (layer Cmts.User)
       (effects (font (size 1 1) (thickness 0.15)))
     )
-    (fp_text value R (at 0 1.5) (layer B.Fab) hide
+    (fp_text value JMP (at 0 1.5) (layer B.Fab) hide
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
     (pad 1 smd rect (at -0.6 0) (size 0.8 0.5) (layers B.Cu B.Paste B.Mask)
@@ -530,7 +530,7 @@
     (fp_text reference C2 (at 0 -1.75 180) (layer B.Fab)
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
-    (fp_text value C (at 0 3.6 180) (layer B.Fab) hide
+    (fp_text value 10u (at 0 3.6 180) (layer B.Fab) hide
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
     (pad 1 smd rect (at -1.3 0 180) (size 1.8 1.25) (layers B.Cu B.Paste B.Mask)
@@ -541,12 +541,12 @@
 
   (module KiCad_Footprints:ZF_SMD_NonPol_0603 (layer B.Cu) (tedit 591B0C64) (tstamp 593212CD)
     (at 193 58.4 270)
-    (path /58B5D1F9)
+    (path /59C4522B)
     (attr smd)
     (fp_text reference C4 (at 0 -1.5 270) (layer B.Fab)
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
-    (fp_text value C (at 0 4.7 270) (layer B.Fab) hide
+    (fp_text value 1u (at 0 4.7 270) (layer B.Fab) hide
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
     (pad 1 smd rect (at -1 0 270) (size 1 1.2) (layers B.Cu B.Paste B.Mask)
@@ -557,12 +557,12 @@
 
   (module KiCad_Footprints:ZF_SMD_nonpol_1206 (layer B.Cu) (tedit 592EF1ED) (tstamp 593212D3)
     (at 196.4 64 270)
-    (path /5931F9C0)
+    (path /59C44EF5)
     (attr smd)
     (fp_text reference C6 (at 0 -1.75 270) (layer B.Fab)
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
-    (fp_text value C (at 0 3.6 270) (layer B.Fab) hide
+    (fp_text value 10u (at 0 3.6 270) (layer B.Fab) hide
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
     (pad 1 smd rect (at -1.3 0 270) (size 1.8 1.25) (layers B.Cu B.Paste B.Mask)
@@ -573,12 +573,12 @@
 
   (module KiCad_Footprints:ZF_SMD_nonpol_1206 (layer B.Cu) (tedit 592EF1ED) (tstamp 593212D9)
     (at 198.1 64 270)
-    (path /5931FAF3)
+    (path /59C45053)
     (attr smd)
     (fp_text reference C7 (at 0 -1.75 270) (layer B.Fab)
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
-    (fp_text value C (at 0 3.6 270) (layer B.Fab) hide
+    (fp_text value 10u (at 0 3.6 270) (layer B.Fab) hide
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
     (pad 1 smd rect (at -1.3 0 270) (size 1.8 1.25) (layers B.Cu B.Paste B.Mask)
@@ -590,7 +590,7 @@
   (module KiCad_Footprints:ZF_SOT23-3L (layer B.Cu) (tedit 58A75C14) (tstamp 593212FC)
     (at 170 58 180)
     (descr 2)
-    (path /5931E27C)
+    (path /59C447A3)
     (attr smd)
     (fp_text reference Q3 (at 0 -2.8 180) (layer Cmts.User)
       (effects (font (size 1 1) (thickness 0.15)))
@@ -629,7 +629,7 @@
 
   (module KiCad_Footprints:ZF_SMD_NonPol_0402 (layer B.Cu) (tedit 591B0B98) (tstamp 59322E76)
     (at 181.4 58 270)
-    (path /5931DADD)
+    (path /59C4438F)
     (attr smd)
     (fp_text reference R6 (at 0 -1.5 270) (layer B.Fab)
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
@@ -650,7 +650,7 @@
 
   (module KiCad_Footprints:ZF_SMD_NonPol_0402 (layer B.Cu) (tedit 591B0B98) (tstamp 59322E7C)
     (at 182.4 58 270)
-    (path /5931E072)
+    (path /59C4447A)
     (attr smd)
     (fp_text reference R7 (at 0 -1.5 270) (layer B.Fab)
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
@@ -691,7 +691,7 @@
   (module KiCad_Footprints:ZF_SOT23-3L (layer B.Cu) (tedit 58A75C14) (tstamp 59322F23)
     (at 172 53 135)
     (descr 2)
-    (path /5931D45B)
+    (path /59C446CC)
     (attr smd)
     (fp_text reference Q2 (at 0 -2.8 135) (layer Cmts.User)
       (effects (font (size 1 1) (thickness 0.15)))
@@ -707,9 +707,9 @@
       (net 2 GND))
   )
 
-  (module KiCad_Footprints:ZF_CONN_JST_GH (layer B.Cu) (tedit 598DFFB7) (tstamp 58BED763)
+  (module KiCad_Footprints:ZF_CONN_JST_GH (layer B.Cu) (tedit 59C58D22) (tstamp 58BED763)
     (at 178 69.4 270)
-    (path /58B5B0E3)
+    (path /59C44503)
     (attr smd)
     (fp_text reference P3 (at 0.7 0 270) (layer B.Fab)
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
@@ -735,9 +735,9 @@
       (net 2 GND))
   )
 
-  (module KiCad_Footprints:ZF_CONN_JST_GH (layer B.Cu) (tedit 598DFFB0) (tstamp 58BED755)
+  (module KiCad_Footprints:ZF_CONN_JST_GH (layer B.Cu) (tedit 59C58D1B) (tstamp 58BED755)
     (at 165.3 61.9 180)
-    (path /58B5B05D)
+    (path /59C44485)
     (attr smd)
     (fp_text reference P2 (at 0.7 0 180) (layer B.Fab)
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
@@ -763,7 +763,7 @@
       (net 2 GND))
   )
 
-  (module KiCad_Footprints:ZF_CONN_JST_GH (layer B.Cu) (tedit 598DFFAA) (tstamp 58BED747)
+  (module KiCad_Footprints:ZF_CONN_JST_GH (layer B.Cu) (tedit 59C58D35) (tstamp 58BED747)
     (at 183.4 48.5 62)
     (path /58B59D8D)
     (attr smd)
@@ -791,7 +791,7 @@
       (net 2 GND))
   )
 
-  (module KiCad_Footprints:ZF_SW_Momentary_SideMtg (layer B.Cu) (tedit 598DFFA0) (tstamp 58BED7CD)
+  (module KiCad_Footprints:ZF_SW_Momentary_SideMtg (layer B.Cu) (tedit 59C58D40) (tstamp 58BED7CD)
     (at 192.2 52.1 332)
     (path /58B5A249)
     (attr smd)
