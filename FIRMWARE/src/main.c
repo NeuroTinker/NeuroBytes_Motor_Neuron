@@ -4,18 +4,21 @@
 #include <libopencm3/cm3/nvic.h>
 #include <libopencm3/cm3/systick.h>
 #include <libopencm3/stm32/exti.h>
+#include <libopencm3/stm32/usart.h>
 
 #include "HAL.h"
 #include "comm.h"
 #include "neuron.h"
 
-#define BLINK_TIME			100
+#define BLINK_TIME			40
 #define DATA_TIME			10
 #define DEND_PING_TIME		200 // 1000 ms
 #define	NID_PING_TIME		200 // 1000 ms
-#define SEND_PING_TIME		80
+#define SEND_PING_TIME		80 // 80
 #define BUTTON_PRESS_TIME	2
-#define BUTTON_HOLD_TIME	100
+#define BUTTON_HOLD_TIME    100
+#define LPUART_SETUP_TIME	100
+#define CHANGE_NID_TIME 	200
 
 static uint32_t fingerprint[3] __attribute__((section (".fingerprint"))) __attribute__ ((__used__)) = {
 	3, // device id
@@ -47,22 +50,61 @@ int main(void)
 	tim_setup();
 	gpio_setup();
 	setLED(200,0,0);
-	//systick_setup(100000);
 
-	//	MMIO32(SYSCFG_BASE + 0x0c) = 0b1111 << 12;
-
-	
 	for(;;)
 	{
 
 		if (main_tick == 1){
 			// 5 ms
-			//setLED(0,200,100);
 			main_tick = 0;
+			
+			// check to see if nid ping hasn't been received in last NID_PING_TIME ticks
+			if (nid_ping_time > 0){
+				nid_ping_time -= 1;
+				if (nid_ping_time == 0){
+					// nid no longer connected
+					nid_distance = 100; // reset nid_keep_alive
+					nid_pin = 0; // clear the nid pin
+					nid_pin_out = 0;
+					nid_i = 13; // make this a macro like NO_NID_I
+				}
+			}
+
+			if (change_nid_time++ > CHANGE_NID_TIME){
+				change_nid_time = 0;
+				closer_distance = nid_distance;
+				closer_ping_count = 0;
+			}
+
+			if (lpuart_setup_time < LPUART_SETUP_TIME){
+				lpuart_setup_time += 1;
+			} else if (lpuart_setup_time == LPUART_SETUP_TIME){
+				lpuart_setup_time += 1;
+				lpuart_setup();
+			}
+
+			/*
+				nid_channel is the current channel, if any, that the NeuroByte is using to communicate
+				with the NID. nid_channel should be cleared when NID tries to set a new NeuroByte to 
+				identify_channel.
+
+				The communication routine sets identify_time to zero when a new identify command is received.
+			*/
+
+			// check for clear channel command
+			if (identify_time < IDENTIFY_TIME){
+				 if (identify_channel == 0){ 
+				 	// setting identify channel 0 clears identify_channel */
+				 	nid_channel = 0; 
+				 } else if (identify_channel == nid_channel && identify_time == 0){ 
+				 	// clear nid_channel if NID is trying to set a new NeuroByte to the current nid_channel */
+				 	nid_channel = 0; 
+				 } 
+				 identify_time += 1;
+			}
 
 			// check identify button
 			button_status = gpio_get(PORT_IDENTIFY, PIN_IDENTIFY);
-			//button_status |= PIN_IDENTIFY;
 
 			// if identify button is pressed and identify_time < IDENTIFY_TIME (i.e. NID sent 'identify'' message), set new nid_channel
 			if (button_status == 0){
@@ -98,7 +140,7 @@ int main(void)
 				button_press_time = 0;
 			}
 
-/*
+			/*
 			button_status = gpio_get(PORT_IDENTIFY, PIN_IDENTIFY);
 			if (identify_time > 0){
 				identify_time -= 1;
@@ -122,15 +164,20 @@ int main(void)
 			} else{
 				button_press_time = 0;
 			}
-*/
+			*/
 			
+			// send current membrane potential to NID if currently identified by NID
 			if (nid_channel != 0){
+				// send data every DATA_TIME ticks
 				if (data_time++ > DATA_TIME){
+					message.message = (((uint32_t) DATA_MESSAGE)) | ((uint16_t) neuron.potential);						
 					data_time = 0;
-					message = DATA_MESSAGE | (uint16_t) neuron.potential | (nid_channel << 19) | (nid_keep_alive << 22);
-					addWrite(NID_BUFF,message);
+					message.length = 32;
+					message.message |= (nid_channel << 21);
+					addWrite(NID_BUFF,(const message_t) message);
 				}
 			}
+
 			
 			checkDendrites(&neuron);
 			

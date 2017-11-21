@@ -7,11 +7,11 @@ volatile uint8_t tick = 0;
 volatile uint8_t main_tick = 0;
 volatile uint8_t read_tick = 0;
 
-volatile uint16_t active_input_pins[NUM_INPUTS] = {[0 ... 7] = 0};
+volatile uint16_t active_input_pins[NUM_INPUTS] = {[0 ... 5] = 0};
 
-volatile uint8_t active_input_tick[NUM_INPUTS] = {[0 ... 7] = 0};
+volatile uint8_t active_input_tick[NUM_INPUTS] = {[0 ... 5] = 0};
 
-volatile uint16_t active_output_pins[NUM_INPUTS] = {[0 ... 7] = 0};
+volatile uint16_t active_output_pins[NUM_INPUTS] = {[0 ... 5] = 0};
 
 volatile uint32_t dendrite_pulses[NUM_DENDS] = {[0 ... NUM_DENDS-1] = 0};
 volatile uint8_t dendrite_pulse_count = 0;
