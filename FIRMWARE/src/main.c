@@ -20,12 +20,6 @@
 #define LPUART_SETUP_TIME	100
 #define CHANGE_NID_TIME 	200
 
-static uint32_t fingerprint[3] __attribute__((section (".fingerprint"))) __attribute__ ((__used__)) = {
-	3, // device id
-	1, // firmware version
-	0  // unique id
-};
-
 typedef enum{
 CR = 	0,
 STD = 	1
@@ -153,33 +147,7 @@ int main(void)
 				}
 				button_press_time = 0;
 			}
-
-			/*
-			button_status = gpio_get(PORT_IDENTIFY, PIN_IDENTIFY);
-			if (identify_time > 0){
-				identify_time -= 1;
-				if (identify_channel == 0){
-					// clear all channels
-					nid_channel = 0;
-				}
-			}
-			if (button_status == 0){ // !=
-				if (button_press_time++ >= BUTTON_PRESS_TIME){
-					button_armed = 1;
-					button_press_time = 0;
-				}
-			} else if (button_armed == 1){
-				if (identify_time > 0){
-					nid_channel = identify_channel;
-				} else{
-					neuron.fire_potential += 60;
-				}
-				button_armed = 0;
-			} else{
-				button_press_time = 0;
-			}
-			*/
-			
+		
 			// send current membrane potential to NID if currently identified by NID
 			if (nid_channel != 0){
 				// send data every DATA_TIME ticks
