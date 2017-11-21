@@ -1,11 +1,72 @@
 
 #include "HAL.h"
-#include "comm.h"
+#include <libopencm3/stm32/usart.h>
 
-volatile uint8_t toggle = 0;
+
 volatile uint8_t tick = 0;
-extern volatile uint8_t main_tick = 0;
+volatile uint8_t main_tick = 0;
 volatile uint8_t read_tick = 0;
+
+volatile uint16_t active_input_pins[NUM_INPUTS] = {[0 ... 7] = 0};
+
+volatile uint8_t active_input_tick[NUM_INPUTS] = {[0 ... 7] = 0};
+
+volatile uint16_t active_output_pins[NUM_INPUTS] = {[0 ... 7] = 0};
+
+volatile uint32_t dendrite_pulses[NUM_DENDS] = {[0 ... NUM_DENDS-1] = 0};
+volatile uint8_t dendrite_pulse_count = 0;
+
+/* 
+
+All available input pins are:
+
+PIN_DEND1_EX,
+PIN_DEND1_IN, 
+PIN_DEND2_EX,
+PIN_DEND2_IN,
+PIN_DEND3_EX,
+PIN_DEND3_IN
+    
+*/
+
+uint32_t active_input_ports[NUM_INPUTS] = {
+    PORT_DEND1_EX,
+    PORT_DEND1_IN,
+    PORT_DEND2_EX,
+    PORT_DEND2_IN,
+    PORT_DEND3_EX,
+    PORT_DEND3_IN
+};
+
+uint32_t active_output_ports[NUM_INPUTS] = {
+    PORT_DEND1_EX,
+    PORT_DEND1_IN,
+    PORT_DEND2_EX,
+    PORT_DEND2_IN,
+    PORT_DEND3_EX,
+    PORT_DEND3_IN
+};
+
+const uint16_t complimentary_pins[NUM_INPUTS] = {
+    PIN_DEND1_IN,
+    PIN_DEND1_EX,
+    PIN_DEND2_IN,
+    PIN_DEND2_EX,
+    PIN_DEND3_IN,
+    PIN_DEND3_EX
+};
+
+const uint32_t complimentary_ports[NUM_INPUTS] = {
+    PORT_DEND1_IN,
+    PORT_DEND1_EX,
+    PORT_DEND2_IN,
+    PORT_DEND2_EX,
+    PORT_DEND3_IN,
+    PORT_DEND3_EX
+};
+
+volatile uint8_t dendrite_pulse_flag[NUM_INPUTS] = {[0 ... NUM_INPUTS-1] = 0};
+volatile uint8_t dendrite_ping_flag[NUM_INPUTS] = {[0 ... NUM_INPUTS-1] = 0};
 
 void clock_setup(void)
 {
@@ -20,14 +81,13 @@ void sys_tick_handler(void)
 		main_tick = 1;
 		tick = 0;
 	}
-	readInputs();
-	
-	if (++read_tick >= 3){
-		write();
+
+	if (read_tick++ >= 2){
+		writeBit();
 		read_tick = 0;
 	}
-	
-	MMIO32((TIM21_BASE) + 0x10) &= ~(1<<0); //clear the interrupt register	
+
+	readBit(read_tick);	
 }
 
 void systick_setup(int xms)
@@ -103,8 +163,6 @@ void gpio_setup(void)
 	setAsInput(PORT_DEND3_IN, PIN_DEND3_IN);
 
 
-	//MMIO32(SYSCFG_BASE + 0x08) |= 0b0001 << 12;
-
 	nvic_enable_irq(NVIC_EXTI0_1_IRQ);
 	nvic_enable_irq(NVIC_EXTI2_3_IRQ);
 	nvic_enable_irq(NVIC_EXTI4_15_IRQ);
@@ -112,9 +170,49 @@ void gpio_setup(void)
 	nvic_set_priority(NVIC_EXTI0_1_IRQ, 0);
 	nvic_set_priority(NVIC_EXTI2_3_IRQ, 0);
 	nvic_set_priority(NVIC_EXTI4_15_IRQ, 0);
-	//MMIO32(SYSCFG_BASE + 0x0c) = 0b0101 << 12;
 
-	//MMIO32((EXTI_BASE) + 0x14) |= (1<<1);
+}
+
+void lpuart_setup(void)
+{
+	// seutp lpuart interface (for communicating with NID)
+	// NOTE: this ocnverts the swd interface to lpuart so debugging with swd will be disables
+	rcc_periph_clock_enable(RCC_LPUART1);
+
+	gpio_mode_setup(PORT_LPUART1_RX, GPIO_MODE_AF, GPIO_PUPD_NONE, PIN_LPUART1_RX);
+	gpio_mode_setup(PORT_LPUART1_TX, GPIO_MODE_AF, GPIO_PUPD_NONE, PIN_LPUART1_TX);
+
+	gpio_set_af(PORT_LPUART1_RX, GPIO_AF6, PIN_LPUART1_RX);
+	gpio_set_af(PORT_LPUART1_TX, GPIO_AF6, PIN_LPUART1_TX);
+
+	USART_BRR(LPUART1) = 0x1A0AA; // 38400 baud
+	usart_set_databits(LPUART1, 8);  // USART_CR1_M
+	usart_set_stopbits(LPUART1, USART_STOPBITS_1); //USART_CR2_STOP
+	usart_set_mode(LPUART1, USART_MODE_TX_RX); //USART_CR1_RE USART_CR1_TE
+	usart_set_parity(LPUART1, USART_PARITY_NONE);// USART_CR1_PS USART_CR1_PCE
+	usart_set_flow_control(LPUART1, USART_FLOWCONTROL_NONE); // USART_CR3_RTSE USART_CR3_CTSE
+
+	usart_enable(LPUART1); // USART_CR1_UE
+
+	// enable interrupts
+	nvic_enable_irq(NVIC_LPUART1_IRQ);
+	usart_enable_rx_interrupt(LPUART1); // USART_CR1_RXNEIE
+    USART_CR1(LPUART1) |= USART_CR1_RE;
+    USART_CR1(LPUART1) |= USART_CR1_TE;
+}
+
+void lpuart1_isr(void)
+{
+    if ((USART_ISR(LPUART1) & USART_ISR_RXNE) != 0){
+        readNID();
+        USART_RQR(LPUART1) = 0b1000;
+        USART_CR1(LPUART1) |= USART_CR1_RE;
+    } else if ((USART_ISR(LPUART1) & USART_ISR_TXE) != 0){
+        /* USART_CR1(LPUART1) |= USART_CR1_TE; */
+        writeNID();
+        USART_RQR(LPUART1) |= USART_RQR_TXFRQ;
+    }
+    USART_ICR(LPUART1) = USART_ISR(LPUART1);
 }
 
 void setAsInput(uint32_t port, uint32_t pin)
@@ -138,8 +236,6 @@ void setAsOutput(uint32_t port, uint32_t pin)
 	gpio_mode_setup(port, GPIO_MODE_OUTPUT, GPIO_PUPD_PULLDOWN, pin);
 }
 
-// working interrupt pins: 0,1,3,4,6,7
-
 /*
 	Each input's ISR tells the communications program that the input is active (getting a message).
 	For dendrite inputs, the ISR also tells the neuron program if the input is excitatory or inhibitory and then toggles input/output
@@ -149,11 +245,11 @@ void exti0_1_isr(void)
 {
 	if ((EXTI_PR & PIN_DEND2_EX) != 0){
 		// dend2 ex
-		active_input_pins[2] = PIN_DEND2_EX;
+		ACTIVATE_INPUT(2, PIN_DEND2_EX);
 		EXTI_PR |= PIN_DEND2_EX; // clear interrupt flag
 	} else if ((EXTI_PR & PIN_DEND2_IN) != 0){
 		//dend2 in
-		active_input_pins[3] = PIN_DEND2_IN;
+		ACTIVATE_INPUT(3, PIN_DEND2_IN);
 		EXTI_PR |= PIN_DEND2_IN;
 	}
 }
@@ -168,19 +264,19 @@ void exti4_15_isr(void)
 {
 	if ((EXTI_PR & PIN_DEND1_EX) != 0){
 		// pin 6 (dend1_ex)
-		active_input_pins[0] = PIN_DEND1_EX;
+		ACTIVATE_INPUT(0, PIN_DEND1_EX);
 		EXTI_PR |= PIN_DEND1_EX;
 	} else if ((EXTI_PR & PIN_DEND1_IN) != 0){
 		// pin 7 (dend1_in)
-		active_input_pins[1] = PIN_DEND1_IN;
+		ACTIVATE_INPUT(1, PIN_DEND1_IN);
 		EXTI_PR |= PIN_DEND1_IN;
 	} else if ((EXTI_PR & PIN_DEND3_EX) != 0){
 		// pin 14 (dend3_ex)
-		active_input_pins[4] = PIN_DEND3_EX;
+		ACTIVATE_INPUT(4, PIN_DEND3_EX);
 		EXTI_PR |= PIN_DEND3_EX;
 	} else if ((EXTI_PR & PIN_DEND3_IN) != 0){
 		// pin 15 (dend3_in)
-		active_input_pins[5] = PIN_DEND3_IN;
+		ACTIVATE_INPUT(5, PIN_DEND3_IN);
 		EXTI_PR |= PIN_DEND3_IN;
 	}
 }
@@ -228,7 +324,7 @@ void tim_setup(void)
 	timer_enable_counter(TIM2);
 
 	// Enable TIM2 interrupts (600 us)
-	timer_enable_irq(TIM2, TIM_DIER_UIE);
+	//timer_enable_irq(TIM2, TIM_DIER_UIE);
 
 	// TIM21
 	rcc_periph_clock_enable(RCC_TIM21);
@@ -255,7 +351,7 @@ void tim_setup(void)
 	timer_enable_counter(TIM21);
 
 	// Enable TIM21 interrupts (600 us)
-	//timer_enable_irq(TIM21, TIM_DIER_UIE);
+	timer_enable_irq(TIM21, TIM_DIER_UIE);
 
 }
 
@@ -269,15 +365,6 @@ void tim21_isr(void)
 	*/
 	//gpio_toggle(PORT_SERVO1, PIN_SERVO1);
     MMIO32((TIM21_BASE) + 0x10) &= ~(1<<0); //clear the interrupt register
-}
-
-void tim2_isr(void)
-{
-	if (timer_get_flag(TIM2, TIM_SR_UIF)){
-		//setLED(200,200,200);
-		//gpio_toggle(PORT_SERVO1, PIN_SERVO1);
-		timer_clear_flag(TIM2, TIM_SR_UIF);
-	}
 }
 
 void LEDFullWhite(void) 

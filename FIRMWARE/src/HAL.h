@@ -10,7 +10,22 @@
 
 #include "comm.h"
 
+
+#define NUM_INPUTS 6
+#define HAS_DENDS   true
+#define NUM_AXONS   0
+#define NUM_DENDS   3
+#define COMPLIMENTARY_I(i)  i - (i % 2) + ((i+1) % 2)
+
 #define TIM21   TIM21_BASE
+
+#define LPUART1         LPUART1_BASE
+
+#define PORT_LPUART1_TX GPIOA
+#define PORT_LPUART1_RX GPIOA
+
+#define PIN_LPUART1_RX  GPIO13
+#define PIN_LPUART1_TX  GPIO14
 
 #define PORT_SERVO1     GPIOA
 #define PORT_SERVO2     GPIOA
@@ -46,28 +61,32 @@
 
 
 
+#define ACTIVATE_INPUT(I, PIN)   active_input_pins[(I)] = PIN; active_input_tick[(I)] = (read_tick + 2) % 3
+
+extern const uint16_t complimentary_pins[NUM_INPUTS];
+extern const uint32_t complimentary_ports[NUM_INPUTS];
+extern volatile uint16_t active_input_pins[NUM_INPUTS];
+extern uint32_t active_input_ports[NUM_INPUTS];
+extern volatile uint16_t active_output_pins[NUM_INPUTS];
+extern uint32_t active_output_ports[NUM_INPUTS];
+extern volatile uint8_t active_input_tick[NUM_INPUTS];
+
+extern volatile uint8_t dendrite_pulse_flag[NUM_INPUTS];
+extern volatile uint8_t dendrite_ping_flag[NUM_INPUTS];
+
 extern volatile uint8_t main_tick;
 extern volatile uint8_t tick;
-extern volatile uint8_t read_tick;
 static const uint16_t gamma_lookup[1024];
-
-
-// uint8_t     read_time = 0;
-
 
 void systick_setup(int xms);
 void clock_setup(void);
 void gpio_setup(void);
 void tim_setup(void);
+void lpuart_setup(void);
 void LEDFullWhite(void);
 void setLED(uint16_t r, uint16_t g, uint16_t b);
 void setAsInput(uint32_t port, uint32_t pin);
 void setAsOutput(uint32_t port, uint32_t pin);
 void setServo(uint8_t servo, int32_t duty);
-
-
-//void tim2_isr(void);
-
-//extern volatile unsigned char ms_tick;
 
 #endif

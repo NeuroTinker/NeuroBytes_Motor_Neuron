@@ -5,9 +5,8 @@
 #include <libopencm3/cm3/systick.h>
 #include <libopencm3/stm32/exti.h>
 
-
-#include "comm.h"
 #include "HAL.h"
+#include "comm.h"
 #include "neuron.h"
 
 #define BLINK_TIME			100
