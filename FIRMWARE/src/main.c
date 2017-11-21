@@ -26,18 +26,33 @@ static uint32_t fingerprint[3] __attribute__((section (".fingerprint"))) __attri
 	0  // unique id
 };
 
+typedef enum{
+CR = 	0,
+STD = 	1
+} servo_type_t;
+
 int main(void)
 {
 	uint32_t	blink_time = 0;
 	uint32_t	wait_time = 0;
 	uint16_t	data_time = 0;
-	uint16_t	message_data = 0;
 	uint16_t	send_ping_time = 0;
+
+	// Button debounce variables
 	uint16_t	button_press_time = 0;
 	uint8_t		button_armed = 0;
 	uint16_t	button_status = 0;
+
+	// NID channel (0 = unselected)
 	uint32_t	nid_channel = 0b000;
-	uint32_t	message = 0;
+
+	// Current servo type (temporary solution)
+	servo_type_t servo_type = CR;
+
+	// Comms elper variables
+	uint16_t	lpuart_setup_time = 0;
+	uint8_t		change_nid_time = 0;
+	message_t	message; // for constructing messages to send to the communications routine
 
 	neuron_t 	neuron;
 	uint8_t		i;
@@ -49,7 +64,6 @@ int main(void)
 	gpio_setup();
 	tim_setup();
 	gpio_setup();
-	setLED(200,0,0);
 
 	for(;;)
 	{
@@ -130,10 +144,10 @@ int main(void)
 					}
 					button_armed = 0;
 				} else if (button_armed == 2){
-					if (neuron.servo_type == CR){
-						neuron.servo_type = STD;
-					} else if (neuron.servo_type == STD){
-						neuron.servo_type = CR;
+					if (servo_type == CR){
+						servo_type = STD;
+					} else if (servo_type == STD){
+						servo_type = CR;
 					}
 					button_armed = 0;
 				}
@@ -187,7 +201,7 @@ int main(void)
 			neuron.potential = calcNeuronPotential(&neuron);
 			neuron.potential += neuron.fire_potential;
 
-			if (neuron.servo_type == CR) {
+			if (servo_type == CR) {
 				setServo(0, (int32_t)((neuron.potential / 1000) + SERVO_ZERO) * 1);
 				setServo(1, (int32_t)((neuron.potential / 1000) - SERVO_ZERO) * -1);
 			} else {
@@ -214,7 +228,7 @@ int main(void)
 				if (neuron.potential > 40000){
 					setLED(200,0,0);
 				} else if (neuron.potential > 0){
-					if (neuron.servo_type == CR) {
+					if (servo_type == CR) {
 						setLED((neuron.potential/2)/100, 200 - ((neuron.potential/2) / 100), 200 - ((neuron.potential/2) / 100));
 					} else {
 						setLED(200, 130 - ((neuron.potential/2) / 154), 0);
@@ -222,13 +236,13 @@ int main(void)
 				} else if (neuron.potential < -40000){
 					setLED(0,0, 200);
 				} else if (neuron.potential < 0){
-					if (neuron.servo_type == CR) {
+					if (servo_type == CR) {
 						setLED(0, 200 + ((neuron.potential/2) / 100), 200);
 					} else {
 						setLED(200 + ((neuron.potential/2) / 100), 130 + ((neuron.potential/2) / 154), -1 * (neuron.potential /2) / 100);
 					}
 				} else{
-					if (neuron.servo_type == CR) {
+					if (servo_type == CR) {
 						setLED(0,200,200);
 					} else {
 						setLED(200,130,0);
