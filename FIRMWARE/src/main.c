@@ -51,6 +51,10 @@ int main(void)
 	neuron_t 	neuron;
 	uint8_t		i;
 	neuronInit(&neuron);
+	// TODO: change the neuron init to be unique to each NB board
+	neuron.dendrites[0].magnitude = 3000;
+	neuron.dendrites[1].magnitude = 3000;
+	neuron.dendrites[2].magnitude = 3000;
 	commInit();
 
 	clock_setup();
@@ -159,7 +163,6 @@ int main(void)
 					addWrite(NID_BUFF,(const message_t) message);
 				}
 			}
-
 			
 			checkDendrites(&neuron);
 			
@@ -170,11 +173,11 @@ int main(void)
 			neuron.potential += neuron.fire_potential;
 
 			if (servo_type == CR) {
-				setServo(0, (int32_t)((neuron.potential / 1000) + SERVO_ZERO) * 1);
-				setServo(1, (int32_t)((neuron.potential / 1000) - SERVO_ZERO) * -1);
-			} else {
 				setServo(0, (int32_t)((neuron.potential / 200) + SERVO_ZERO) * 1);
 				setServo(1, (int32_t)((neuron.potential / 200) - SERVO_ZERO) * -1);
+			} else {
+				setServo(0, (int32_t)((neuron.potential / 50) + SERVO_ZERO) * 1);
+				setServo(1, (int32_t)((neuron.potential / 50) - SERVO_ZERO) * -1);
 			}
 
 			if (blink_flag != 0){
@@ -186,35 +189,17 @@ int main(void)
 					setLED(200,0,0);
 					blink_time = 0;
 				}
-			} else if (neuron.state == FIRE){
-				neuron.fire_time -= 1;
-				if (neuron.fire_time == 0){
-					neuron.state = INTEGRATE;
-				}
-				LEDFullWhite();
 			} else if (neuron.state == INTEGRATE){
-				if (neuron.potential > 40000){
+				if (neuron.potential > 10000){
 					setLED(200,0,0);
 				} else if (neuron.potential > 0){
-					if (servo_type == CR) {
-						setLED((neuron.potential/2)/100, 200 - ((neuron.potential/2) / 100), 200 - ((neuron.potential/2) / 100));
-					} else {
-						setLED(200, 130 - ((neuron.potential/2) / 154), 0);
-					}
-				} else if (neuron.potential < -40000){
+					setLED(neuron.potential / 50, 200 - (neuron.potential / 50), 0);
+				} else if (neuron.potential < -10000){
 					setLED(0,0, 200);
 				} else if (neuron.potential < 0){
-					if (servo_type == CR) {
-						setLED(0, 200 + ((neuron.potential/2) / 100), 200);
-					} else {
-						setLED(200 + ((neuron.potential/2) / 100), 130 + ((neuron.potential/2) / 154), -1 * (neuron.potential /2) / 100);
-					}
+					setLED(0, 200 + (neuron.potential / 50), -1 * neuron.potential / 50);
 				} else{
-					if (servo_type == CR) {
-						setLED(0,200,200);
-					} else {
-						setLED(200,130,0);
-					}
+					setLED(0,200,0);
 				}
 			}
 		}

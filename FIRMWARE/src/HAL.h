@@ -17,6 +17,7 @@
 #define NUM_AXONS   0
 #define NUM_DENDS   3
 #define COMPLIMENTARY_I(i)  i - (i % 2) + ((i+1) % 2)
+#define IS_EXCITATORY(i)        ((i+1) % 2)
 
 #define TIM21   TIM21_BASE
 
@@ -79,6 +80,7 @@ extern volatile uint8_t main_tick;
 extern volatile uint8_t tick;
 static const uint16_t gamma_lookup[1024];
 
+bool checkVersion(uint8_t dev, uint16_t version);
 void systick_setup(int xms);
 void clock_setup(void);
 void gpio_setup(void);
