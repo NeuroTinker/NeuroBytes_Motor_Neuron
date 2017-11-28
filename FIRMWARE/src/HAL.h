@@ -59,9 +59,6 @@
 #define PIN_DEND3_IN    GPIO15
 #define PIN_DEND3_EX    GPIO14
 
-#define SERVO_ZERO      280
-
-
 
 #define ACTIVATE_INPUT(I, PIN)   active_input_pins[(I)] = PIN; active_input_tick[(I)] = (read_tick + 2) % 3
 
