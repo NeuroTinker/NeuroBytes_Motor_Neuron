@@ -25,6 +25,15 @@ CR = 	0,
 STD = 	1
 } servo_type_t;
 
+typedef enum{
+    CURRENT     =   0b0001,
+    DEND1       =   0b0010,
+    DEND2       =   0b0011,
+	DEND3       =   0b0100,
+	PWM_SPAN	=	0b0101,
+	PWM_ZERO	=	0b0111
+} parameter_identifiers;
+
 int main(void)
 {
 	uint32_t	blink_time = 0;
