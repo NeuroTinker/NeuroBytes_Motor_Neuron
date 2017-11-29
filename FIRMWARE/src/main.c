@@ -42,7 +42,7 @@ int main(void)
 
 	// Current servo type (temporary solution)
 	servo_type_t servo_type = CR;
-	uint16_t servo_zero = 240;
+	uint16_t servo_zero = 280;
 	uint16_t servo_span = 40;
 
 	// Comms elper variables
