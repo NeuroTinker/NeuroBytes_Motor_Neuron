@@ -174,6 +174,29 @@ int main(void)
 					addWrite(NID_BUFF,(const message_t) message);
 				}
 			}
+			if (comms_flag != 0){
+				switch (comms_flag){
+					case DEND1:
+						neuron.dendrites[0].magnitude = comms_data;
+						break;
+					case DEND2:
+						neuron.dendrites[1].magnitude = comms_data;
+						break;
+					case DEND3:
+						neuron.dendrites[2].magnitude = comms_data;
+						break;
+					case PWM_ZERO:
+						pwm_zero = comms_data;
+						break;
+					case PWM_SPAN:
+						pwm_span = comms_data;
+						break;
+				}
+				comms_flag = 0;
+				comms_data = 0;
+			}
+
+
 			
 			checkDendrites(&neuron);
 			
