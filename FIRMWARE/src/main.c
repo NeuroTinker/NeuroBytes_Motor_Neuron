@@ -50,11 +50,11 @@ int main(void)
 	uint32_t	nid_channel = 0b000;
 
 	// Current servo type (temporary solution)
-	servo_type_t servo_type = CR;
-	uint16_t servo_zero = 280;
-	uint16_t servo_span = 40;
+	servo_type_t servo_type = STD; 
+	uint16_t servo_zero = 280; // CR = 280
+	uint16_t servo_span = 40; // CR = 40
 
-	// Comms elper variables
+	// Comms helper variables
 	uint16_t	lpuart_setup_time = 0;
 	uint8_t		change_nid_time = 0;
 	message_t	message; // for constructing messages to send to the communications routine
@@ -66,6 +66,9 @@ int main(void)
 	neuron.dendrites[0].magnitude = 3000;
 	neuron.dendrites[1].magnitude = 3000;
 	neuron.dendrites[2].magnitude = 3000;
+	neuron.dendrites[0].base_magnitude = 3000;
+	neuron.dendrites[1].base_magnitude = 3000;
+	neuron.dendrites[2].base_magnitude = 3000;
 	commInit();
 
 	clock_setup();
@@ -107,6 +110,35 @@ int main(void)
 			}
 
 			/*
+				Check to see if any comms flags have been set.
+				Process any data that came from the NID.
+			*/
+
+			if (comms_flag != 0){
+				switch (comms_flag){
+					case DEND1:
+						neuron.dendrites[0].magnitude = comms_data;
+						break;
+					case DEND2:
+						neuron.dendrites[1].magnitude = comms_data;
+						break;
+					case DEND3:
+						neuron.dendrites[2].magnitude = comms_data;
+						break;
+					case PWM_SPAN:
+						servo_span = comms_data;
+						break;
+					case PWM_ZERO:
+						servo_zero = comms_data;
+						break;
+					default:
+						break;
+				}
+				comms_flag = 0;
+				comms_data = 0;
+			}
+
+			/*
 				nid_channel is the current channel, if any, that the NeuroByte is using to communicate
 				with the NID. nid_channel should be cleared when NID tries to set a new NeuroByte to 
 				identify_channel.
@@ -116,7 +148,7 @@ int main(void)
 
 			// check for clear channel command
 			if (identify_time < IDENTIFY_TIME){
-				if (identify_time > 0){
+				if (identify_time == 0){
 					if ((identify_channel == 0) || (identify_channel == nid_channel)){
 						nid_channel = 0;
 					}
@@ -141,14 +173,9 @@ int main(void)
 				// button not pressed
 				if (button_armed == 0){
 					button_press_time = 0;
-				} else if (button_armed == 1){
-					if (identify_time < IDENTIFY_TIME){
-						nid_channel = identify_channel;
-					} else{
-						// temporarily use identify button also as an impulse button
-						neuron.fire_potential += 11000;
-						//neuron.leaky_current += 20;
-					}
+				} else if (button_armed == 1 && nid_i != NO_NID_I){
+					nid_channel = identify_channel;
+					identify_time = 1;
 					button_armed = 0;
 				} else if (button_armed == 2){
 					if (servo_type == CR){
@@ -184,10 +211,10 @@ int main(void)
 						neuron.dendrites[2].magnitude = comms_data;
 						break;
 					case PWM_ZERO:
-						pwm_zero = comms_data;
+						servo_zero = comms_data;
 						break;
 					case PWM_SPAN:
-						pwm_span = comms_data;
+						servo_span = comms_data;
 						break;
 				}
 				comms_flag = 0;
@@ -208,7 +235,7 @@ int main(void)
 				setServo(0, (int32_t)((neuron.potential / 200) + servo_zero) * 1);
 				setServo(1, (int32_t)((neuron.potential / 200) - servo_zero) * -1);
 			} else {
-				setServo(0, (int32_t)((neuron.potential / servo_span) + servo_zero) * 1);
+				setServo(0, (int32_t)(servo_zero + (neuron.potential / servo_span)));
 				setServo(1, (int32_t)((neuron.potential / servo_span) - servo_zero) * -1);
 			}
 
