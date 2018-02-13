@@ -5,7 +5,7 @@
     (no_connects 0)
     (area 146.19 35.09 243.047146 127.615)
     (thickness 1.6)
-    (drawings 156)
+    (drawings 158)
     (tracks 237)
     (zones 0)
     (modules 28)
@@ -1890,6 +1890,8 @@
       (xy -0.684378 -1.077273) (xy -0.388972 -1.209629) (xy -0.073742 -1.267479) (xy 0.245793 -1.251628)) (layer F.Cu) (width 0.01))
   )
 
+  (gr_line (start 162.44 74.79) (end 162.44 69.79) (layer F.Fab) (width 0.2))
+  (gr_line (start 159.94 72.29) (end 164.94 72.29) (layer F.Fab) (width 0.2))
   (gr_text "NOTES:\n1. FOOTPRINTS ORIENTED PER IPC-7351FC LEVEL B (PIN 1 IN LOWER LEFT)\n2. COMPONENT ROTATION IN DEGREES COUNTER-CLOCKWISE\n3. ALL COMPONENTS MOUNTED ON B.CU LAYER (LED IS BOTTOM-MOUNT)\n4. PCB IS 1.6mm FR4 RATED FOR ROHS REFLOW, 1OZ COPPER, ENIG FINISH\n5. MATTE BLACK SOLDER MASK WITH WHITE SILKSCREEN\n6. SOLDER PASTE MUST BE ROHS COMPLIANT (LEAD-FREE)\n7. NO MARKS (E-TEST, QA, SERIAL NUMBER, ETC) ON FRONT (LOGO SIDE) OF BOARD\n8. BOARDS TO BE SHIPPED IN CUSTOMER-SUPPLIED FOAM TRAYS\n9. 3MM LED HOLE IS PLATED" (at 146.19 114.79) (layer F.Fab)
     (effects (font (size 1.5 1.5) (thickness 0.3)) (justify left))
   )
