@@ -235,8 +235,8 @@ int main(void)
 				setServo(0, (int32_t)((neuron.potential / 190) + 270) * 1);
 				setServo(1, (int32_t)((neuron.potential / 190) - 270) * -1);
 			} else {
-				setServo(0, (int32_t)(280 + (neuron.potential / 40)));
-				setServo(1, (int32_t)((neuron.potential / 40) - 280) * -1);
+				setServo(0, (int32_t)(280 + (neuron.potential / 35)));
+				setServo(1, (int32_t)((neuron.potential / 35) - 280) * -1);
 			}
 
 			if (blink_flag != 0){
