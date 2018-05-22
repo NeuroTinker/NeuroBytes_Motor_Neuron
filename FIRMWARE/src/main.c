@@ -52,7 +52,7 @@ int main(void)
 	// Current servo type (temporary solution)
 	servo_type_t servo_type = STD; 
 	uint16_t servo_zero = 280; // CR = 280
-	uint16_t servo_span = 40; // CR = 40
+	uint16_t servo_span = 50; // CR = 40
 
 	// Comms helper variables
 	uint16_t	lpuart_setup_time = 0;
@@ -232,11 +232,11 @@ int main(void)
 			neuron.potential += neuron.fire_potential;
 
 			if (servo_type == CR) {
-				setServo(0, (int32_t)((neuron.potential / 200) + servo_zero) * 1);
-				setServo(1, (int32_t)((neuron.potential / 200) - servo_zero) * -1);
+				setServo(0, (int32_t)((neuron.potential / 190) + 270) * 1);
+				setServo(1, (int32_t)((neuron.potential / 190) - 270) * -1);
 			} else {
-				setServo(0, (int32_t)(servo_zero + (neuron.potential / servo_span)));
-				setServo(1, (int32_t)((neuron.potential / servo_span) - servo_zero) * -1);
+				setServo(0, (int32_t)(280 + (neuron.potential / 35)));
+				setServo(1, (int32_t)((neuron.potential / 35) - 280) * -1);
 			}
 
 			if (blink_flag != 0){
