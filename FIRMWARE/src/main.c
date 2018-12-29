@@ -21,8 +21,8 @@
 #define CHANGE_NID_TIME 	200
 
 typedef enum{
-CR = 	0,
-STD = 	1
+CR = 	1,
+STD = 	0
 } servo_type_t;
 
 typedef enum{
@@ -51,6 +51,8 @@ int main(void)
 
 	// Current servo type (temporary solution)
 	servo_type_t servo_type = STD; 
+	uint8_t saved_servo_type = eepromRead(SERVO_TYPE_ADDRESS);
+	if (saved_servo_type == 0 || saved_servo_type == 1) servo_type = saved_servo_type;
 	uint16_t servo_zero = 280; // CR = 280
 	uint16_t servo_span = 50; // CR = 40
 
@@ -70,6 +72,13 @@ int main(void)
 	neuron.dendrites[1].base_magnitude = 3000;
 	neuron.dendrites[2].base_magnitude = 3000;
 	commInit();
+
+	// setup eeprom
+
+	MMIO32(FLASH_MEM_INTERFACE_BASE + FLASH_PEKEYR) = FLASH_PEKEY1;
+	MMIO32(FLASH_MEM_INTERFACE_BASE + FLASH_PEKEYR) = FLASH_PEKEY2;
+	MMIO32(FLASH_MEM_INTERFACE_BASE + FLASH_PRGKEYR) = FLASH_PRGKEY1;
+	MMIO32(FLASH_MEM_INTERFACE_BASE + FLASH_PRGKEYR) = FLASH_PRGKEY2;
 
 	clock_setup();
 	systick_setup(100); // comm clock in microseconds
@@ -183,6 +192,7 @@ int main(void)
 					} else if (servo_type == STD){
 						servo_type = CR;
 					}
+					eepromProgram(SERVO_TYPE_ADDRESS, servo_type);
 					button_armed = 0;
 				}
 				button_press_time = 0;

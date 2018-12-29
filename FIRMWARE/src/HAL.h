@@ -62,6 +62,15 @@
 
 #define ACTIVATE_INPUT(I, PIN)   active_input_pins[(I)] = PIN; active_input_tick[(I)] = (read_tick + 2) % 3
 
+#define EEPROM_ADDRESS  0x08080000 // 0x08000080 & 0x08080000
+#define SERVO_TYPE_ADDRESS    EEPROM_ADDRESS + 0x00
+#define FLASH_PRGKEY1   0x8C9DAEBF
+#define FLASH_PRGKEY2   0x13141516
+#define FLASH_PRGKEYR   0x10
+#define FLASH_PEKEY1    0x89ABCDEF
+#define FLASH_PEKEY2    0x02030405
+#define FLASH_PEKEYR    0x0C
+
 extern const uint16_t complimentary_pins[NUM_INPUTS];
 extern const uint32_t complimentary_ports[NUM_INPUTS];
 extern volatile uint16_t active_input_pins[NUM_INPUTS];

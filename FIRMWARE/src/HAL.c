@@ -425,6 +425,17 @@ void setServo(uint8_t servo, int32_t duty)
 }
 
 
+void eepromProgram(uint32_t address, uint32_t data)
+{
+	MMIO32(address) = data;
+}
+
+uint32_t eepromRead(uint32_t address)
+{
+	return MMIO32(address);
+}
+
+
 static const uint16_t gamma_lookup[1024] = {
 	/*	Gamma = 2, input range = 0-1023, output range = 0-2047 */
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
