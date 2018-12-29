@@ -1,4 +1,4 @@
-update=Fri 22 Sep 2017 05:21:29 PM CDT
+update=Thu 31 May 2018 04:00:37 PM CDT
 version=1
 last_client=kicad
 [pcbnew]
@@ -59,3 +59,13 @@ LibName27=atmel
 LibName28=contrib
 LibName29=valves
 LibName30=NeuroBytes_Schematic_Lib/NeuroTinker_schematic_symbols
+[schematic_editor]
+version=1
+PageLayoutDescrFile=
+PlotDirectoryName=
+SubpartIdSeparator=0
+SubpartFirstId=65
+NetFmtName=
+SpiceForceRefPrefix=0
+SpiceUseNetNumbers=0
+LabSize=60

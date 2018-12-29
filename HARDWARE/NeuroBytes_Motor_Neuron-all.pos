@@ -1,0 +1,33 @@
+### Module positions - created on Wed May 23 15:12:18 2018 ###
+### Printed by Pcbnew version kicad 4.0.7-e2-6376~58~ubuntu14.04.1
+## Unit = mm, Angle = deg.
+## Side : All
+# Ref     Val           Package                         PosX       PosY       Rot     Side
+C1        1u            C0603                        	35.5600    13.8900   90.0000  bottom
+C2        10u           C1206                        	23.5600    16.3900  180.0000  bottom
+C3        0u1           C0402                    	23.5750    14.9000  180.0000  bottom
+C4        1u            C0603                    	30.5600    13.8900  270.0000  bottom
+C5        0u1           C0402                    	32.1000     8.3000   90.0000  bottom
+C6        22u           C1206                        	33.6000     8.2900  270.0000  bottom
+C7        22u           C1206                        	35.6600     8.2900  270.0000  bottom
+D1        LED_RABG      4-SMT    			14.5600    14.2900  270.0000  bottom
+P1        JST_GH_4POS   JST_GH_4POS                     20.9600    23.7900   62.0000  bottom
+P2        JST_GH_4POS   JST_GH_4POS                      2.8600    10.3900  180.0000  bottom
+P3        JST_GH_4POS   JST_GH_4POS                     15.5600     2.8900  270.0000  bottom
+P4        SERVO_CONN    SERVO_HDR_SMT                   38.0600    12.5900    0.0000  bottom
+P5        SERVO_CONN    SERVO_HDR_SMT                   38.0800     4.0900    0.0000  bottom
+P6        JST_GH_5-pos  GH_5POS                       	30.1000     3.0000  270.0000  bottom
+Q1        MMBT3904      SOT23-3L                        14.5600    21.2900   90.0000  bottom
+Q2        MMBT3904      SOT23-3L                         9.5600    19.2900  135.0000  bottom
+Q3        MMBT3904      SOT23-3L                         7.5600    14.2900  180.0000  bottom
+R1        150           R0402                        	14.5600    18.6900  180.0000  bottom
+R2        100           R0402                        	10.1600    14.2900  270.0000  bottom
+R3        100           R0402                        	14.5600     9.7900  180.0000  bottom
+R4        JMP           R0402                        	23.5600     6.2900    0.0000  bottom
+R5        1k            R0402                        	17.9600    14.2900  270.0000  bottom
+R6        1k            R0402                        	18.9600    14.2900  270.0000  bottom
+R7        1k            R0402                        	19.9600    14.2900  270.0000  bottom
+SW1       SW_PUSH       4-SMT                   	29.7600    20.1900  332.0000  bottom
+U1        STM32L011Gx   UFQFPN28-050                    23.5600    10.4900   45.0000  bottom
+U2        LD3985G33R    SOT23-5L                        33.0600    13.8900  180.0000  bottom
+## End
