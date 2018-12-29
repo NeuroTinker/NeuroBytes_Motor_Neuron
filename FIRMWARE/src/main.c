@@ -259,16 +259,33 @@ int main(void)
 					blink_time = 0;
 				}
 			} else if (neuron.state == INTEGRATE){
-				if (neuron.potential > 10000){
-					setLED(200,0,0);
-				} else if (neuron.potential > 0){
-					setLED(neuron.potential / 50, 200 - (neuron.potential / 50), 0);
-				} else if (neuron.potential < -10000){
-					setLED(0,0, 200);
-				} else if (neuron.potential < 0){
-					setLED(0, 200 + (neuron.potential / 50), -1 * neuron.potential / 50);
-				} else{
-					setLED(0,200,0);
+				if (servo_type == STD) {
+					if (neuron.potential > 10000){
+							setLED(200,0,0);
+					} else if (neuron.potential > 0){
+						setLED(neuron.potential / 50, 200 - (neuron.potential / 50), 0);
+					} else if (neuron.potential < -10000){
+						setLED(0,0, 200);
+					} else if (neuron.potential < 0){
+						setLED(0, 200 + (neuron.potential / 50), -1 * neuron.potential / 50);
+					} else{
+						setLED(0,200,0);
+					}
+				} else if (servo_type == CR) {
+					if (neuron.potential > 10000){
+							setLED(500,0,0);
+					} else if (neuron.potential > 0){
+						uint8_t blue = 200 - 1 * neuron.potential / 50;
+						if (blue < 0) blue = 0;
+						setLED(neuron.potential / 20, 200 - neuron.potential / 50, blue);
+					} else if (neuron.potential < -10000){
+						setLED(0,0, 200);
+					} else if (neuron.potential < 0){
+						setLED(0, 200 + (neuron.potential / 50), 200 -1 * neuron.potential / 50);
+					} else{
+						setLED(0,200,200);
+					}
+
 				}
 			}
 		}
